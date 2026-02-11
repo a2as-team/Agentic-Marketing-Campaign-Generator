@@ -1,0 +1,1356 @@
+manifest:
+  version: "0.1.3"
+  schema: https://a2as.org/cert/schema
+  subject:
+    name: jpantsjoha/agentic-marketing-campaign-generator
+    source: https://github.com/jpantsjoha/agentic-marketing-campaign-generator
+    branch: main
+    commit: "7e06c42c"
+    scope: [backend/agents/business_analysis_agent.py, backend/api/routes/campaigns.py, backend/agents/agent.py, backend/agents/marketing_orchestrator.py,
+      backend/agents/adk_visual_agents.py, backend/agents/visual_content_agent.py, backend/agents/__init__.py, backend/api/main.py,
+      backend/api/routes/content.py, backend/agents/async_visual_manager.py, backend/marketing_agent.py, backend/api/routes/config.py,
+      backend/api/routes/analysis.py]
+  issued:
+    by: A2AS.org
+    at: '2026-02-11T16:37:40Z'
+    url: https://a2as.org/certified/agents/jpantsjoha/agentic-marketing-campaign-generator
+  signatures:
+    digest: sha256:A-_yGwgO6c8nOs_SM7kzkoj9es30Ojb8EEvgQXHq-pI
+    key: ed25519:YrjFDSUgjC5NLcQSWn2FnV1k8LejfxctsMCpvPknKdE
+    sig: ed25519:x8kh0aDNbHEfOARYdAV4ZHIZOgXyf7bwv9HzTZxfTMCX_Q4A0n3iZbTJ6jTy36Z4gZCPtdvTbBYGCNUYJqSnBA
+
+agents:
+  agent.0:
+    type: instance
+    models: [gemini-2.5-flash]
+    params:
+      function: _generate_image_async
+      instance: agent
+  agent.1:
+    type: instance
+    models: [gemini-2.5-flash]
+    params:
+      function: _generate_video_async
+      instance: agent
+  agent.create_root_agent:
+    type: factory
+    params:
+      name: VideoVentureLaunchAgent
+      description: |-
+        Orchestrates the complete marketing campaign generation workflow,
+        from business analysis to content creation and video production.
+      function: create_root_agent
+      sub_agents: [summary_agent, idea_agent, social_agent, video_agent]
+  business_agent:
+    type: instance
+    params:
+      name: BusinessAnalysisAgent
+      description: Comprehensive business analysis and context extraction workflow
+      function: create_business_analysis_agent
+      sub_agents: [url_agent, file_agent, context_agent]
+  content_agent:
+    type: instance
+    params:
+      name: ContentGenerationAgent
+      description: Multi-format social media content generation and optimization workflow
+      function: create_content_generation_agent
+      sub_agents: [social_agent, hashtag_agent]
+  context_agent:
+    type: instance
+    params:
+      name: BusinessContextAgent
+      instruction: [You are a strategic business analyst who synthesizes multiple data sources into comprehensive business
+          context for marketing campaigns., 'Input Sources:', '- URL Analysis: {url_analysis}', '- File Analysis: {file_analysis}',
+        '- User Input: {user_input}', '- Campaign Type: {campaign_type}', '- Campaign Objective: {objective}', '- Target Audience:
+          {target_audience}', '- Creativity Level: {creativity_level}', 'Synthesize all information to create comprehensive
+          business context with DETAILED VISUAL CONTEXT for image generation:', '1. **Unified Business Profile**:', '- Company
+          overview and positioning', '- Core value propositions', '- Competitive advantages', '- Market presence and reputation',
+        '2. **Target Audience Analysis**:', '- Primary and secondary segments', '- Demographics and psychographics (age, lifestyle,
+          interests)', '- Pain points and motivations', '- Communication preferences', '- Decision-making factors', '3. **Brand
+          Guidelines**:', '- Voice and tone recommendations', '- Visual style direction', '- Messaging themes and keywords',
+        '- Content style preferences', '- Brand personality traits', '4. **DETAILED VISUAL CONTEXT** (Critical for Image Generation):',
+        '- **Product/Service Visualization**: Specific visual elements that represent the business', '* For t-shirt printing:
+          "people wearing custom t-shirts", "design printing process", "happy customers in branded apparel"', '* For restaurants:
+          "food presentation", "dining atmosphere", "chef preparing dishes", "satisfied customers eating"', '* For fitness:
+          "people exercising", "trainer-client interactions", "gym equipment", "fitness transformations"', '* For tech services:
+          "professionals using technology", "modern office environments", "digital interfaces", "team collaboration"', '-
+          **Industry-Specific Visual Elements**:', '* Colors, textures, environments that represent the industry', '* Typical
+          customer scenarios and use cases', '* Product in action or service being delivered', '* Emotional context (joy,
+          satisfaction, success, transformation)', '- **Target Demographic Visuals**:', '* Age groups, lifestyle indicators,
+          fashion/style preferences', '* Settings where target audience would be found', '* Activities and interests of target
+          demographic', '* Social and cultural context', '5. **Campaign Strategy Foundation**:', '- Key messaging pillars',
+        '- Content themes and topics', '- Channel recommendations', '- Engagement strategies', '- Success metrics and KPIs',
+        '6. **Creative Direction for Visual Content**:', '- Specific image concepts that would resonate with target audience',
+        '- Visual storytelling themes', '- Photography style recommendations (lifestyle, product, portrait, etc.)', '- Color
+          palette and aesthetic direction', '- Composition and framing suggestions', 'Output comprehensive business context
+          that provides SPECIFIC, ACTIONABLE visual direction for image generation agents. Focus on concrete, visual elements
+          rather than abstract concepts.']
+      description: Synthesizes all business intelligence into comprehensive campaign context with detailed visual direction
+      output_key: business_context
+      function: create_business_context_agent
+  file_agent:
+    type: instance
+    params:
+      name: FileAnalysisAgent
+      instruction: [You are a multimodal content analyst specializing in extracting business insights from various file types.,
+        'Input: Uploaded files including images, documents, and campaign assets', 'For **Images** (products, logos, marketing
+          materials):', '1. **Visual Brand Analysis**:', '- Color palette and brand colors', '- Typography and font styles',
+        '- Logo design and brand elements', '- Visual style and aesthetic direction', '2. **Product Analysis**:', '- Product
+          features and characteristics', '- Use contexts and environments', '- Target demographic indicators', '- Quality
+          and positioning signals', '3. **Marketing Material Analysis**:', '- Design trends and preferences', '- Messaging
+          themes and tone', '- Target audience visual cues', '- Campaign style and approach', 'For **Documents** (specs, brochures,
+          presentations):', '1. **Content Intelligence**:', '- Key value propositions', '- Technical specifications', '- Market
+          positioning statements', '- Competitive advantages', '2. **Audience Insights**:', '- Language complexity and tone',
+        '- Technical depth and expertise level', '- Decision-maker targeting', '- Communication preferences', 'For **Campaign
+          Assets** (previous marketing materials):', '1. **Performance Indicators**:', '- Successful messaging themes', '-
+          Effective visual elements', '- Audience engagement patterns', '- Brand consistency elements', '2. **Strategic Insights**:',
+        '- Campaign evolution and trends', '- Seasonal or temporal patterns', '- Channel-specific adaptations', '- Content
+          performance indicators', Output comprehensive file analysis with actionable insights for campaign strategy.]
+      description: Analyzes uploaded files using multimodal AI for business and brand insights
+      output_key: file_analysis
+      function: create_file_analysis_agent
+  hashtag_agent:
+    type: instance
+    tools: [optimize_hashtags]
+    params:
+      name: HashtagOptimizationAgent
+      instruction: [You are a hashtag optimization expert. Your task is to enhance the hashtags in social media posts, 'to
+          maximize reach, engagement, and discoverability across different platforms.', 'When the optimize_hashtags tool is
+          called, analyze the provided social posts and business context', to create optimized hashtag strategies. Return
+          the enhanced posts in the same JSON format but with, 'improved hashtags:', 'For each post, optimize hashtags by:',
+        1. Adding trending hashtags relevant to the business/industry, 2. Including niche-specific hashtags for targeted reach,
+        3. Balancing popular vs. less competitive hashtags, 4. Ensuring platform-specific hashtag strategies, 5. Maintaining
+          relevance to the post content, 'Platform-specific hashtag guidelines:', '- Instagram: 20-30 hashtags, mix of popular
+          and niche', '- Twitter: 1-2 hashtags, focus on trending topics', '- LinkedIn: 3-5 professional hashtags', '- Facebook:
+          1-2 hashtags, focus on community building', '- TikTok: 3-5 trending hashtags', Return the posts with enhanced hashtag
+          arrays and updated platform_optimized sections., 'Ensure all hashtags are relevant, properly formatted, and likely
+          to increase engagement.']
+      description: Optimizes hashtags for social media posts to maximize reach and engagement
+      output_key: optimized_posts
+      function: create_hashtag_optimization_agent
+  idea_agent:
+    type: instance
+    models: [gemini-2.0-pro]
+    params:
+      name: IdeaAgent
+      instruction: ['Using the campaign summary: {summary},', generate innovative marketing campaign ideas that align with
+          the business, objectives and target audience., 'For each idea, provide:', 1. Core concept, 2. Key messaging points,
+        3. Target channels, 4. Expected impact, 5. Implementation considerations, 'Format each idea as:', 'Idea X:', '- Concept:
+          [concept]', '- Messaging: [key points]', '- Channels: [platforms]', '- Impact: [expected results]', '- Implementation:
+          [key steps]']
+      description: Generates comprehensive marketing campaign ideas.
+      output_key: ideas
+      function: create_idea_agent
+  image_agent.0:
+    type: instance
+    models: [gemini-2.5-flash]
+    params:
+      function: __init__
+      instance: image_agent
+  image_agent.1:
+    type: instance
+    models: [gemini-2.0-pro]
+    params:
+      class: ImageGenerationAgent
+      base: LlmAgent
+      name: ImageGenerationAgent
+      instruction: [You are an expert marketing image generation agent with autonomous validation capabilities., 'Your role
+          is to:', 1. Analyze social media post content and campaign guidance, 2. Create contextually relevant image generation
+          prompts, 3. Generate high-quality images using Imagen API, 4. Validate generated images for quality and relevance,
+        5. Iterate and improve if validation fails, 6. Ensure brand consistency and campaign alignment, 'You have access to:',
+        '- Post content and context', '- Campaign creative guidance and objectives', '- Business context and brand information',
+        '- Image generation and validation tools', '- Caching system for efficiency', 'Always prioritize:', '- Content relevance
+          to the post', '- Alignment with campaign objectives', '- Brand consistency and visual quality', '- Platform optimization
+          for social media', '- Professional marketing standards', 'If validation fails, analyze the feedback and refine your
+          approach autonomously.']
+      description: Autonomous image generation agent with validation and self-correction capabilities
+      instance: image_agent
+  marketing_agent:
+    type: instance
+    params:
+      name: MarketingOrchestratorAgent
+      description: Master orchestrator for complete marketing campaign workflow that coordinates business analysis and content
+        generation
+      function: create_marketing_orchestrator_agent
+      sub_agents: [business_agent, content_agent]
+  orchestrator:
+    type: instance
+    models: [gemini-2.5-flash]
+    params:
+      function: generate_agentic_visual_content
+  real_agent.0:
+    type: instance
+    models: [gemini-2.5-flash]
+    params:
+      function: _generate_imagen_content
+      instance: real_agent
+  real_agent.1:
+    type: instance
+    models: [gemini-2.5-flash]
+    params:
+      function: _generate_veo_content
+      instance: real_agent
+  root_agent:
+    type: instance
+    params:
+      name: MarketingOrchestratorAgent
+      description: Marketing Campaign Post Generator - ADK Root Agent
+      function: get_root_agent
+  social_agent.0:
+    type: instance
+    models: [gemini-2.5-flash]
+    tools: [generate_social_posts]
+    params:
+      name: SocialContentAgent
+      description: Generates engaging social media posts based on business context and campaign objectives, conforming to
+        ADR-020 JSON schema.
+      instruction: [=== STRICT JSON SCHEMA ENFORCEMENT (ADR-020) ===, 'You are a social media content generation expert. Your
+          task is to create engaging,', platform-optimized social media posts based on the provided business context., IMMEDIATELY
+          call the generate_social_posts tool with the provided parameters to create, a comprehensive set of social media
+          posts., 'CRITICAL: You MUST return your response in the following EXACT JSON format - NO VARIATIONS ALLOWED:', '{',
+        '"social_media_posts": [', '{', '"id": "post_001",', '"type": "text_url",', '"content": "Engaging post content here
+          (100-200 words)...",', '"hashtags": ["#relevant", "#hashtags"],', '"image_prompt": null,', '"video_prompt": null',
+        '},', '{', '"id": "post_002",', '"type": "text_image",', '"content": "Visual post content here (100-200 words)...",',
+        '"hashtags": ["#visual", "#content"],', '"image_prompt": "Detailed image generation prompt for AI",', '"video_prompt":
+          null', '},', '{', '"id": "post_003",', '"type": "text_video",', '"content": "Video post content here (100-200 words)...",',
+        '"hashtags": ["#video", "#content"],', '"image_prompt": null,', '"video_prompt": "Detailed video generation prompt
+          for AI"', '}', ']', '}', 'MANDATORY REQUIREMENTS:', 1. Use ONLY the key "social_media_posts" as the root array,
+        '2. Each post must have EXACTLY these fields: id, type, content, hashtags, image_prompt, video_prompt', '3. The "type"
+          field must be EXACTLY one of: "text_url", "text_image", "text_video"', '4. For text_url posts: image_prompt and
+          video_prompt must be null', '5. For text_image posts: image_prompt must be detailed string, video_prompt must be
+          null', '6. For text_video posts: video_prompt must be detailed string, image_prompt must be null', 7. Generate posts
+          equally distributed across the three types, '8. Each post content must be 100-200 words, engaging and relevant',
+        9. Include 3-5 relevant hashtags per post, '10. Use sequential IDs: post_001, post_002, post_003, etc.', 'FORBIDDEN
+          ACTIONS:', '- Do NOT use keys like "text_url_posts", "text_image_posts", "text_video_posts"', '- Do NOT use keys
+          like "generated_content" or any other variations', '- Do NOT include "platform_optimized" or "engagement_score"
+          fields', '- Do NOT deviate from the exact schema above', Generate the exact number of posts specified by the post_count
+          parameter from the tool call.]
+      output_key: social_posts
+      function: create_social_content_agent
+      instance: social_agent
+  social_agent.1:
+    type: instance
+    models: [gemini-2.0-pro]
+    params:
+      name: SocialPostAgent
+      instruction: ['For each marketing idea in {ideas},', create engaging social media content that can be used across different
+          platforms., 'For each idea, generate:', 1. A main post (280 characters max), '2. Platform-specific variations (Twitter,
+          LinkedIn, Instagram)', 3. Hashtag recommendations, 4. Call-to-action suggestions, 'Format as:', 'Idea X Social Content:',
+        '- Main Post: [content]', '- Twitter: [variation]', '- LinkedIn: [variation]', '- Instagram: [variation]', '- Hashtags:
+          [recommendations]', '- CTA: [suggestions]']
+      description: Creates platform-specific social media content.
+      output_key: posts
+      function: create_social_agent
+      instance: social_agent
+  summary_agent:
+    type: instance
+    models: [gemini-2.0-pro]
+    params:
+      name: SummaryAgent
+      instruction: [You are an expert marketing strategist., Analyze the provided business description and objective to create
+          a comprehensive, campaign summary. Consider the target audience and business context., 'Input Context:', '- Business
+          Description: {business_description}', '- Campaign Objective: {objective}', '- Target Audience: {target_audience}',
+        'Generate a detailed summary that captures:', 1. Key business value propositions, 2. Target audience insights, 3.
+          Campaign objectives and success metrics, 4. Brand voice and tone recommendations]
+      description: Analyzes business context and creates campaign summary.
+      output_key: summary
+      function: create_summary_agent
+  temp_agent:
+    type: instance
+    models: [gemini-2.5-flash]
+    params:
+      function: _create_fallback_video_file
+  url_agent:
+    type: instance
+    params:
+      name: URLAnalysisAgent
+      instruction: [You are an expert web content analyzer specializing in business intelligence extraction., 'Given business
+          URLs (website, about page, product/service pages), extract comprehensive business information:', 'Input Context:',
+        '- Business Website: {business_website}', '- About Page: {about_page_url}', '- Product/Service Page: {product_service_url}',
+        'For each URL, analyze and extract:', '1. **Company Overview**:', '- Company name and tagline', '- Mission, vision,
+          and values', '- Year founded and company size', '- Geographic presence and markets served', '2. **Products/Services
+          Analysis**:', '- Core offerings and features', '- Pricing models and packages', '- Target use cases and applications',
+        '- Competitive advantages and differentiators', '3. **Target Audience Insights**:', '- Primary customer segments',
+        '- Demographics and psychographics', '- Pain points and challenges addressed', '- Customer success stories and testimonials',
+        '4. **Brand Analysis**:', '- Brand voice and tone', '- Visual identity and design language', '- Key messaging themes',
+        '- Content style and communication approach', '5. **Market Positioning**:', '- Industry sector and niche', '- Competitive
+          landscape', '- Unique value propositions', '- Market differentiation strategy', Output a comprehensive business
+          analysis in JSON format with confidence scores for each insight.]
+      description: Analyzes business URLs to extract comprehensive company and market intelligence
+      output_key: url_analysis
+      function: create_url_analysis_agent
+  video_agent.0:
+    type: instance
+    models: [gemini-2.5-flash]
+    params:
+      function: __init__
+      instance: video_agent
+  video_agent.1:
+    type: instance
+    models: [gemini-2.0-pro]
+    params:
+      class: VideoGenerationAgent
+      base: LlmAgent
+      name: VideoGenerationAgent
+      instruction: [You are an expert marketing video generation agent with autonomous validation capabilities., 'Your role
+          is to:', 1. Analyze social media post content and campaign guidance, 2. Create contextually relevant video generation
+          prompts, 3. Generate high-quality videos using Veo API, 4. Validate generated videos for quality and relevance,
+        5. Iterate and improve if validation fails, 6. Ensure brand consistency and campaign alignment, 'You have access to:',
+        '- Post content and context', '- Campaign creative guidance and objectives', '- Business context and brand information',
+        '- Video generation and validation tools', '- Caching system for efficiency', 'Always prioritize:', '- Content relevance
+          to the post', '- Alignment with campaign objectives', '- Brand consistency and visual quality', '- Platform optimization
+          for social media', '- Professional marketing standards', 'If validation fails, analyze the feedback and refine your
+          approach autonomously.']
+      description: Autonomous video generation agent with validation and self-correction capabilities
+      instance: video_agent
+  video_agent.2:
+    type: instance
+    models: [gemini-2.0-pro]
+    params:
+      name: VideoAgent
+      instruction: ['Based on the campaign ideas and social content,', generate detailed video production prompts for Veo
+          API., 'For each idea, create:', 1. Video concept and storyboard, 2. Visual style recommendations, 3. Music and sound
+          suggestions, 4. Text overlay recommendations, 5. Duration and format specifications, 'Format as:', 'Idea X Video
+          Prompt:', '- Concept: [description]', '- Visual Style: [recommendations]', '- Audio: [suggestions]', '- Text: [overlay
+          content]', '- Format: [specifications]']
+      description: Generates video production prompts for Veo API.
+      output_key: video_prompts
+      function: create_video_agent
+      instance: video_agent
+  visual_orchestrator:
+    type: instance
+    models: [gemini-2.5-flash]
+    params:
+      class: VisualContentOrchestratorAgent
+      base: SequentialAgent
+      name: VisualContentOrchestratorAgent
+      sub_agents: [image_agent, video_agent]
+      description: "Orchestrates autonomous visual content generation with validation.\n            \nCoordinates parallel\
+        \ image and video generation agents to create high-quality,\ncampaign-aligned visual content with autonomous validation\
+        \ and self-correction."
+
+models:
+  gemini-2.0-pro:
+    type: literal
+    agents: [image_agent.1, video_agent.1, summary_agent, idea_agent, social_agent.1, video_agent.2]
+  gemini-2.5-flash:
+    type: literal
+    agents: [social_agent.0, real_agent.0, real_agent.1, temp_agent, image_agent.0, video_agent.0, orchestrator, agent.0,
+      agent.1, visual_orchestrator]
+
+tools:
+  generate_social_posts:
+    type: function
+    agents: [social_agent.0]
+    params:
+      description: Generate social media posts based on business context.
+  optimize_hashtags:
+    type: function
+    agents: [hashtag_agent]
+    params:
+      description: Optimizes hashtags for social media posts.
+
+teams:
+  agent.create_root_agent:
+    type: sequential
+    agents: [agent.create_root_agent, summary_agent, idea_agent, social_agent, video_agent]
+  business_agent:
+    type: sequential
+    agents: [business_agent, url_agent, file_agent, context_agent]
+  content_agent:
+    type: sequential
+    agents: [content_agent, social_agent, hashtag_agent]
+  orchestrator:
+    type: sequential
+    agents: [orchestrator, business_agent, content_agent]
+
+imports:
+  aiohttp: aiohttp
+  analysis_router: routes.analysis.router
+  analyze_business_urls: agents.business_analysis_agent.analyze_business_urls
+  Any: typing.Any
+  APIRouter: fastapi.APIRouter
+  asynccontextmanager: contextlib.asynccontextmanager
+  AsyncGenerator: typing.AsyncGenerator
+  asyncio: asyncio
+  AsyncVisualResponse: models.AsyncVisualResponse
+  BaseAgent: google.adk.agents.base_agent.BaseAgent
+  BaseModel: pydantic.BaseModel
+  BatchVisualStatus: api.models.BatchVisualStatus
+  BeautifulSoup: bs4.BeautifulSoup
+  BusinessAnalysis: models.BusinessAnalysis
+  Callable: typing.Callable
+  CallbackContext: google.adk.agents.callback_context.CallbackContext
+  CampaignImageCache: agents.visual_content_agent.CampaignImageCache
+  CampaignRequest: models.CampaignRequest
+  CampaignResponse: models.CampaignResponse
+  campaigns_router: routes.campaigns.router
+  CampaignVideoCache: agents.visual_content_agent.CampaignVideoCache
+  config_router: routes.config.router
+  content_router: routes.content.router
+  ContentGenerationRequest: models.ContentGenerationRequest
+  ContentGenerationResponse: models.ContentGenerationResponse
+  CORSMiddleware: fastapi.middleware.cors.CORSMiddleware
+  create_marketing_orchestrator_agent: agents.marketing_orchestrator.create_marketing_orchestrator_agent
+  dataclass: dataclasses.dataclass
+  datetime: datetime.datetime
+  Depends: fastapi.Depends
+  Dict: typing.Dict
+  Enum: enum.Enum
+  ErrorResponse: models.ErrorResponse
+  execute_campaign_workflow: agents.marketing_orchestrator.execute_campaign_workflow
+  FastAPI: fastapi.FastAPI
+  field: dataclasses.field
+  File: fastapi.File
+  FileResponse: fastapi.responses.FileResponse
+  Form: fastapi.Form
+  Gemini: google.adk.models.Gemini
+  genai: google.genai
+  generate_agentic_visual_content: agents.adk_visual_agents.generate_agentic_visual_content
+  generate_visual_content_for_posts: agents.visual_content_agent.generate_visual_content_for_posts
+  get_campaign_by_id: database.database.get_campaign_by_id
+  get_logger: config.logging.get_logger
+  hashlib: hashlib
+  HTTPException: fastapi.HTTPException
+  Image: PIL.Image
+  ImageDraw: PIL.ImageDraw
+  ImageFont: PIL.ImageFont
+  ImageGenerationAgent: visual_content_agent.ImageGenerationAgent
+  InMemoryArtifactService: google.adk.artifacts.in_memory_artifact_service.InMemoryArtifactService
+  InMemoryRunner: google.adk.runners.InMemoryRunner
+  InMemorySessionService: google.adk.sessions.in_memory_session_service.InMemorySessionService
+  InvocationContext: google.adk.agents.invocation_context.InvocationContext
+  io: io
+  json: json
+  JSONResponse: fastapi.responses.JSONResponse
+  List: typing.List
+  LlmAgent: google.adk.agents.llm_agent.LlmAgent
+  load_dotenv: dotenv.load_dotenv
+  logging: logging
+  Optional: typing.Optional
+  orchestrator: agents.marketing_orchestrator
+  os: os
+  ParallelAgent: google.adk.agents.parallel_agent.ParallelAgent
+  Path: pathlib.Path
+  PostType: models.PostType
+  re: re
+  reload_marketing_agent: main.reload_marketing_agent
+  root_agent: agent.root_agent
+  RunConfig: google.adk.agents.run_config.RunConfig
+  SequentialAgent: google.adk.agents.sequential_agent.SequentialAgent
+  setup_logging: config.logging.setup_logging
+  social_auth_router: routes.social_auth.router
+  social_posts_router: routes.social_posts.router
+  SocialMediaPost: models.SocialMediaPost
+  SocialPostRegenerationRequest: models.SocialPostRegenerationRequest
+  SocialPostRegenerationResponse: models.SocialPostRegenerationResponse
+  StreamingMode: google.adk.agents.run_config.StreamingMode
+  sys: sys
+  test_router: routes.test_endpoints.router
+  time: time
+  timedelta: datetime.timedelta
+  trace_call_llm: google.adk.telemetry.trace_call_llm
+  tracer: google.adk.telemetry.tracer
+  TrustedHostMiddleware: fastapi.middleware.trustedhost.TrustedHostMiddleware
+  Tuple: typing.Tuple
+  types: google.genai.types
+  update_campaign_analysis: database.database.update_campaign_analysis
+  UploadFile: fastapi.UploadFile
+  URLAnalysisAgent: agents.business_analysis_agent.URLAnalysisAgent
+  URLAnalysisRequest: models.URLAnalysisRequest
+  URLAnalysisResponse: models.URLAnalysisResponse
+  urljoin: urllib.parse.urljoin
+  urlparse: urllib.parse.urlparse
+  uuid: uuid
+  uvicorn: uvicorn
+  VideoGenerationAgent: visual_content_agent.VideoGenerationAgent
+  VisualContentOrchestrator: visual_content_agent.VisualContentOrchestrator
+  VisualContentOrchestratorAgent: adk_visual_agents.VisualContentOrchestratorAgent
+  VisualContentType: api.models.VisualContentType
+  VisualGenerationJob: api.models.VisualGenerationJob
+  VisualJobStatus: api.models.VisualJobStatus
+  VisualJobUpdate: models.VisualJobUpdate
+
+functions:
+  __init__:
+    type: sync
+    module: backend.marketing_agent
+    args: [self]
+  _analyze_content_with_ai:
+    type: async
+    module: backend.agents.business_analysis_agent
+    args: [self, url_contents, analysis_type]
+    params:
+      returns: Dict
+  _build_analysis_prompt:
+    type: sync
+    module: backend.agents.business_analysis_agent
+    args: [self, url_contents, analysis_type]
+    params:
+      returns: str
+  _create_campaign_aware_prompt:
+    type: sync
+    module: backend.agents.adk_visual_agents
+    args: [self, post_content, campaign_guidance, business_context]
+    params:
+      returns: str
+  _create_campaign_aware_video_prompt:
+    type: sync
+    module: backend.agents.adk_visual_agents
+    args: [self, post_content, campaign_guidance, business_context]
+    params:
+      returns: str
+  _create_fallback_image_file:
+    type: async
+    module: backend.agents.adk_visual_agents
+    args: [self, prompt, campaign_id]
+    params:
+      returns: Dict
+  _create_fallback_video_file:
+    type: async
+    module: backend.agents.adk_visual_agents
+    args: [self, prompt, campaign_id]
+    params:
+      returns: Dict
+  _create_image_prompt:
+    type: sync
+    module: backend.agents.async_visual_manager
+    args: [self, post, business_context, objective]
+    params:
+      returns: str
+  _create_video_prompt:
+    type: sync
+    module: backend.agents.async_visual_manager
+    args: [self, post, business_context, objective]
+    params:
+      returns: str
+  _create_visual_job:
+    type: sync
+    module: backend.agents.async_visual_manager
+    args: [self, campaign_id, post_id, post_content, content_type, business_context, campaign_objective]
+    params:
+      returns: VisualGenerationJob
+  _extract_brand_personality:
+    type: sync
+    module: backend.agents.business_analysis_agent
+    args: [self, ai_response]
+    params:
+      returns: str
+  _extract_brand_voice:
+    type: sync
+    module: backend.agents.business_analysis_agent
+    args: [self, ai_response]
+    params:
+      returns: str
+  _extract_business_context_from_description:
+    type: async
+    module: backend.agents.marketing_orchestrator
+    args: [business_description, target_audience, objective, campaign_type]
+    params:
+      returns: Dict
+  _extract_business_description:
+    type: sync
+    module: backend.agents.business_analysis_agent
+    args: [self, ai_response]
+    params:
+      returns: str
+  _extract_campaign_guidance:
+    type: sync
+    module: backend.agents.business_analysis_agent
+    args: [self, text]
+    params:
+      returns: Dict
+  _extract_color_palette:
+    type: sync
+    module: backend.agents.business_analysis_agent
+    args: [self, ai_response]
+    params:
+      returns: List[str]
+  _extract_company_name:
+    type: sync
+    module: backend.agents.business_analysis_agent
+    args: [self, ai_response, url_contents]
+    params:
+      returns: str
+  _extract_competitive_advantages:
+    type: sync
+    module: backend.agents.business_analysis_agent
+    args: [self, ai_response]
+    params:
+      returns: List[str]
+  _extract_creative_direction:
+    type: sync
+    module: backend.agents.business_analysis_agent
+    args: [self, ai_response]
+    params:
+      returns: str
+  _extract_design_style:
+    type: sync
+    module: backend.agents.business_analysis_agent
+    args: [self, ai_response]
+    params:
+      returns: str
+  _extract_field:
+    type: sync
+    module: backend.agents.business_analysis_agent
+    args: [self, text, field_name]
+    params:
+      returns: str
+  _extract_industry:
+    type: sync
+    module: backend.agents.business_analysis_agent
+    args: [self, ai_response]
+    params:
+      returns: str
+  _extract_key_messaging:
+    type: sync
+    module: backend.agents.business_analysis_agent
+    args: [self, ai_response]
+    params:
+      returns: List[str]
+  _extract_list_field:
+    type: sync
+    module: backend.agents.business_analysis_agent
+    args: [self, text, field_name]
+    params:
+      returns: List[str]
+  _extract_product_context:
+    type: sync
+    module: backend.agents.business_analysis_agent
+    args: [self, text]
+    params:
+      returns: Dict
+  _extract_real_campaign_guidance:
+    type: sync
+    module: backend.agents.business_analysis_agent
+    args: [self, ai_response, product_context]
+    params:
+      returns: Dict
+  _extract_real_product_context:
+    type: sync
+    module: backend.agents.business_analysis_agent
+    args: [self, ai_response, url_contents]
+    params:
+      returns: Dict
+  _extract_structured_business_context:
+    type: sync
+    module: backend.agents.business_analysis_agent
+    args: [self, ai_response, url_contents]
+    params:
+      returns: Dict
+  _extract_suggested_tags:
+    type: sync
+    module: backend.agents.business_analysis_agent
+    args: [self, ai_response]
+    params:
+      returns: List[str]
+  _extract_suggested_themes:
+    type: sync
+    module: backend.agents.business_analysis_agent
+    args: [self, ai_response]
+    params:
+      returns: List[str]
+  _extract_target_audience:
+    type: sync
+    module: backend.agents.business_analysis_agent
+    args: [self, ai_response]
+    params:
+      returns: str
+  _extract_target_scenarios:
+    type: sync
+    module: backend.agents.business_analysis_agent
+    args: [self, ai_response]
+    params:
+      returns: List[str]
+  _extract_visual_style_details:
+    type: sync
+    module: backend.agents.business_analysis_agent
+    args: [self, ai_response]
+    params:
+      returns: Dict
+  _extract_visual_themes:
+    type: sync
+    module: backend.agents.business_analysis_agent
+    args: [self, ai_response]
+    params:
+      returns: List[str]
+  _format_generated_content:
+    type: sync
+    module: backend.agents.marketing_orchestrator
+    args: [content_data, context, business_analysis]
+    params:
+      returns: List[Dict]
+  _format_single_post:
+    type: sync
+    module: backend.agents.marketing_orchestrator
+    args: [post_data, post_type, business_analysis]
+    params:
+      returns: Dict
+  _generate_batch_content_with_gemini:
+    type: async
+    module: backend.api.routes.content
+    args: [post_type, regenerate_count, business_context]
+    params:
+      returns: List[SocialMediaPost]
+  _generate_content_based_analysis:
+    type: sync
+    module: backend.agents.business_analysis_agent
+    args: [self, url_contents]
+    params:
+      returns: Dict
+  _generate_enhanced_mock_analysis:
+    type: sync
+    module: backend.agents.business_analysis_agent
+    args: [self, url_contents, analysis_type]
+    params:
+      returns: Dict
+  _generate_fallback_analysis:
+    type: sync
+    module: backend.agents.business_analysis_agent
+    args: [self, urls]
+    params:
+      returns: Dict
+  _generate_fallback_campaign_guidance:
+    type: sync
+    module: backend.agents.business_analysis_agent
+    args: [self, analysis_text]
+    params:
+      returns: Dict
+  _generate_fallback_posts:
+    type: sync
+    module: backend.api.routes.content
+    args: [post_type, count, business_context]
+    params:
+      returns: List[SocialMediaPost]
+  _generate_image_async:
+    type: async
+    module: backend.agents.async_visual_manager
+    args: [self, job, worker_name]
+    params:
+      returns: Dict
+  _generate_image_for_post:
+    type: async
+    module: backend.agents.adk_visual_agents
+    args: [self, post_content, campaign_guidance, business_context, campaign_id]
+    params:
+      returns: Dict
+  _generate_imagen_content:
+    type: async
+    module: backend.agents.adk_visual_agents
+    args: [self, prompt, campaign_id]
+    params:
+      returns: Dict
+  _generate_media_tuning:
+    type: sync
+    module: backend.agents.business_analysis_agent
+    args: [self, product_context]
+    params:
+      returns: str
+  _generate_real_social_content:
+    type: async
+    module: backend.agents.marketing_orchestrator
+    args: [business_analysis, context]
+    params:
+      returns: Dict
+  _generate_veo_content:
+    type: async
+    module: backend.agents.adk_visual_agents
+    args: [self, prompt, campaign_id]
+    params:
+      returns: Dict
+  _generate_video_async:
+    type: async
+    module: backend.agents.async_visual_manager
+    args: [self, job, worker_name]
+    params:
+      returns: Dict
+  _generate_video_for_post:
+    type: async
+    module: backend.agents.adk_visual_agents
+    args: [self, post_content, campaign_guidance, business_context, campaign_id]
+    params:
+      returns: Dict
+  _is_valid_url:
+    type: sync
+    module: backend.api.routes.analysis
+    args: [url]
+    params:
+      returns: bool
+  _manual_business_context_extraction:
+    type: sync
+    module: backend.agents.marketing_orchestrator
+    args: [business_description, target_audience, objective]
+    params:
+      returns: Dict
+  _mark_job_completed:
+    type: async
+    module: backend.agents.async_visual_manager
+    args: [self, job_id, result]
+  _mark_job_failed:
+    type: async
+    module: backend.agents.async_visual_manager
+    args: [self, job_id, error_message]
+  _parse_ai_analysis:
+    type: sync
+    module: backend.agents.business_analysis_agent
+    args: [self, ai_response, url_contents]
+    params:
+      returns: Dict
+  _process_visual_job:
+    type: async
+    module: backend.agents.async_visual_manager
+    args: [self, job, worker_name]
+  _scrape_url_content:
+    type: async
+    module: backend.agents.business_analysis_agent
+    args: [self, session, url]
+    params:
+      returns: Dict
+  _try_extract_json_structure:
+    type: sync
+    module: backend.agents.business_analysis_agent
+    args: [self, ai_response]
+    params:
+      returns: Optional[Dict]
+  _update_job_progress:
+    type: async
+    module: backend.agents.async_visual_manager
+    args: [self, job_id, progress, step]
+  _update_job_status:
+    type: async
+    module: backend.agents.async_visual_manager
+    args: [self, job_id, status, progress]
+  _validate_and_enhance_context:
+    type: sync
+    module: backend.agents.business_analysis_agent
+    args: [self, context, url_contents]
+    params:
+      returns: Dict
+  _worker:
+    type: async
+    module: backend.agents.async_visual_manager
+    args: [self, worker_name]
+  agent_status:
+    type: async
+    module: backend.api.main
+  analyze_business_url:
+    type: async
+    module: backend.api.routes.analysis
+    args: [request]
+  analyze_business_urls:
+    type: async
+    module: backend.agents.business_analysis_agent
+    args: [urls, analysis_type]
+    params:
+      returns: Dict
+  analyze_files:
+    type: async
+    module: backend.api.routes.analysis
+    args: [files, analysis_type]
+  analyze_urls:
+    type: async
+    module: backend.agents.business_analysis_agent
+    args: [self, urls, analysis_type]
+    params:
+      returns: Dict
+  cache:
+    type: sync
+    module: backend.agents.adk_visual_agents
+    args: [self]
+  cancel_visual_generation:
+    type: async
+    module: backend.api.routes.content
+    args: [campaign_id]
+  chat_with_campaign_guidance:
+    type: async
+    module: backend.api.routes.campaigns
+    args: [campaign_id, request, current_user]
+  cleanup_campaign_context:
+    type: sync
+    module: backend.api.routes.campaigns
+    args: [campaign_id]
+  cleanup_old_images:
+    type: async
+    module: backend.api.routes.content
+    args: [request]
+  clear_image_cache:
+    type: async
+    module: backend.api.routes.content
+    args: [request]
+  clear_video_cache:
+    type: async
+    module: backend.api.routes.content
+    args: [request]
+  create_business_analysis_agent:
+    type: async
+    module: backend.agents.marketing_orchestrator
+    params:
+      returns: SequentialAgent
+  create_business_context_agent:
+    type: async
+    module: backend.agents.marketing_orchestrator
+    params:
+      returns: LlmAgent
+  create_campaign:
+    type: async
+    module: backend.api.routes.campaigns
+    args: [request, current_user]
+    params:
+      returns: CampaignResponse
+  create_content_generation_agent:
+    type: async
+    module: backend.agents.marketing_orchestrator
+    params:
+      returns: SequentialAgent
+  create_file_analysis_agent:
+    type: async
+    module: backend.agents.marketing_orchestrator
+    params:
+      returns: LlmAgent
+  create_hashtag_optimization_agent:
+    type: async
+    module: backend.agents.marketing_orchestrator
+    params:
+      returns: LlmAgent
+  create_idea_agent:
+    type: async
+    module: backend.marketing_agent
+    params:
+      returns: LlmAgent
+  create_isolated_campaign_context:
+    type: sync
+    module: backend.api.routes.campaigns
+    args: [campaign_id, request]
+    params:
+      returns: Dict
+  create_marketing_orchestrator_agent:
+    type: async
+    module: backend.agents.marketing_orchestrator
+    params:
+      returns: SequentialAgent
+  create_root_agent:
+    type: async
+    module: backend.marketing_agent
+    params:
+      returns: SequentialAgent
+  create_social_agent:
+    type: async
+    module: backend.marketing_agent
+    params:
+      returns: LlmAgent
+  create_social_content_agent:
+    type: async
+    module: backend.agents.marketing_orchestrator
+    params:
+      returns: LlmAgent
+  create_summary_agent:
+    type: async
+    module: backend.marketing_agent
+    params:
+      returns: LlmAgent
+  create_url_analysis_agent:
+    type: async
+    module: backend.agents.marketing_orchestrator
+    params:
+      returns: LlmAgent
+  create_video_agent:
+    type: async
+    module: backend.marketing_agent
+    params:
+      returns: LlmAgent
+  deep_merge:
+    type: sync
+    module: backend.api.routes.campaigns
+    args: [base_dict, update_dict]
+  delete_campaign:
+    type: async
+    module: backend.api.routes.campaigns
+    args: [campaign_id]
+    params:
+      returns: Dict
+  duplicate_campaign:
+    type: async
+    module: backend.api.routes.campaigns
+    args: [campaign_id]
+    params:
+      returns: CampaignResponse
+  execute_campaign_workflow:
+    type: async
+    module: backend.agents.marketing_orchestrator
+    args: [business_description, objective, target_audience, campaign_type, creativity_level, post_count, business_website,
+      about_page_url, product_service_url, uploaded_files, campaign_id, session_id, isolation_key, campaign_guidance]
+    params:
+      returns: Dict
+  export_campaign:
+    type: async
+    module: backend.api.routes.campaigns
+    args: [campaign_id, format]
+  general_exception_handler:
+    type: async
+    module: backend.api.main
+    args: [request, exc]
+  generate_agentic_visual_content:
+    type: async
+    module: backend.agents.adk_visual_agents
+    args: [social_posts, business_context, campaign_objective, campaign_guidance, campaign_id]
+    params:
+      returns: Dict
+  generate_and_validate_image:
+    type: async
+    module: backend.agents.adk_visual_agents
+    args: [self, post_content, campaign_guidance, business_context, campaign_id, max_iterations]
+    params:
+      returns: Dict
+  generate_and_validate_video:
+    type: async
+    module: backend.agents.adk_visual_agents
+    args: [self, post_content, campaign_guidance, business_context, campaign_id, max_iterations]
+    params:
+      returns: Dict
+  generate_bulk_content:
+    type: async
+    module: backend.api.routes.content
+    args: [request]
+  generate_content:
+    type: async
+    module: backend.api.routes.content
+    args: [request]
+    params:
+      returns: ContentGenerationResponse
+  generate_contextual_hashtags:
+    type: sync
+    module: backend.api.routes.content
+    args: [business_context]
+    params:
+      returns: List[str]
+  generate_enhanced_content:
+    type: sync
+    module: backend.api.routes.content
+    args: [post_type, business_context, index]
+    params:
+      returns: str
+  generate_enhanced_content_for_bulk:
+    type: sync
+    module: backend.api.routes.content
+    args: [post_type, business_context, index]
+    params:
+      returns: str
+  generate_social_posts:
+    type: sync
+    module: backend.agents.marketing_orchestrator
+    args: [business_context, objective, target_audience, campaign_type, creativity_level, post_count]
+    params:
+      returns: dict
+  generate_visual_content:
+    type: async
+    module: backend.api.routes.content
+    args: [request]
+  generate_visual_content_for_posts:
+    type: async
+    module: backend.agents.adk_visual_agents
+    args: [self, social_posts, business_context, campaign_objective, campaign_guidance, campaign_id]
+    params:
+      returns: Dict
+  get_cache_stats:
+    type: async
+    module: backend.api.routes.content
+    args: [campaign_id]
+  get_campaign:
+    type: async
+    module: backend.api.routes.campaigns
+    args: [campaign_id]
+    params:
+      returns: CampaignResponse
+  get_campaign_status:
+    type: sync
+    module: backend.agents.async_visual_manager
+    args: [self, campaign_id]
+    params:
+      returns: BatchVisualStatus
+  get_current_user:
+    type: sync
+    module: backend.api.routes.campaigns
+    params:
+      returns: str
+  get_job_status:
+    type: sync
+    module: backend.agents.async_visual_manager
+    args: [self, job_id]
+    params:
+      returns: Optional[VisualGenerationJob]
+  get_root_agent:
+    type: async
+    module: backend.marketing_agent
+  get_video_cache_stats:
+    type: async
+    module: backend.api.routes.content
+    args: [campaign_id]
+  get_visual_generation_status:
+    type: async
+    module: backend.api.routes.content
+    args: [campaign_id]
+  get_visual_job_status:
+    type: async
+    module: backend.api.routes.content
+    args: [job_id]
+  health_check:
+    type: async
+    module: backend.api.main
+  http_exception_handler:
+    type: async
+    module: backend.api.main
+    args: [request, exc]
+  image_agent:
+    type: sync
+    module: backend.agents.adk_visual_agents
+    args: [self]
+  image_model:
+    type: sync
+    module: backend.agents.adk_visual_agents
+    args: [self]
+  imagen_client:
+    type: sync
+    module: backend.agents.adk_visual_agents
+    args: [self]
+  lifespan:
+    type: async
+    module: backend.api.main
+    args: [app]
+    params:
+      returns: AsyncGenerator
+  list_campaigns:
+    type: async
+    module: backend.api.routes.campaigns
+    args: [limit, offset]
+    params:
+      returns: Dict
+  optimize_hashtags:
+    type: sync
+    module: backend.agents.marketing_orchestrator
+    args: [social_posts, business_context, target_platforms]
+    params:
+      returns: dict
+  queue_visual_generation:
+    type: async
+    module: backend.agents.async_visual_manager
+    args: [self, campaign_id, posts, business_context, campaign_objective]
+    params:
+      returns: List[VisualGenerationJob]
+  regenerate_posts:
+    type: async
+    module: backend.api.routes.content
+    args: [request]
+    params:
+      returns: SocialPostRegenerationResponse
+  reload_marketing_agent:
+    type: async
+    module: backend.api.main
+    params:
+      returns: SequentialAgent
+  root:
+    type: async
+    module: backend.api.main
+  safe_int_env:
+    type: sync
+    module: backend.api.routes.content
+    args: [env_var, default]
+    params:
+      returns: int
+  serve_generated_image:
+    type: async
+    module: backend.api.routes.content
+    args: [campaign_id, filename]
+  serve_generated_video:
+    type: async
+    module: backend.api.routes.content
+    args: [campaign_id, filename]
+  set_gemini_key:
+    type: async
+    module: backend.api.routes.config
+    args: [req]
+  span:
+    type: sync
+    module: backend.marketing_agent
+    args: [self, func]
+  start_async_visual_generation:
+    type: async
+    module: backend.api.routes.content
+    args: [request]
+  start_workers:
+    type: async
+    module: backend.agents.async_visual_manager
+    args: [self]
+  stop_workers:
+    type: async
+    module: backend.agents.async_visual_manager
+    args: [self]
+  tracer_span:
+    type: sync
+    module: backend.marketing_agent
+    args: [func]
+  update_campaign_guidance:
+    type: async
+    module: backend.api.routes.campaigns
+    args: [campaign_id, guidance_updates, current_user]
+  update_gemini_api_key:
+    type: sync
+    module: backend.agents.marketing_orchestrator
+    args: [new_key]
+    params:
+      returns: None
+  validate_image_content:
+    type: async
+    module: backend.agents.adk_visual_agents
+    args: [self, image_url, post_content, campaign_guidance, business_context]
+    params:
+      returns: Dict
+  validate_video_content:
+    type: async
+    module: backend.agents.adk_visual_agents
+    args: [self, video_url, post_content, campaign_guidance, business_context]
+    params:
+      returns: Dict
+  validator:
+    type: sync
+    module: backend.agents.adk_visual_agents
+    args: [self]
+  veo_client:
+    type: sync
+    module: backend.agents.adk_visual_agents
+    args: [self]
+  video_agent:
+    type: sync
+    module: backend.agents.adk_visual_agents
+    args: [self]
+  video_model:
+    type: sync
+    module: backend.agents.adk_visual_agents
+    args: [self]
+
+variables:
+  env_var:
+    type: env
+    params:
+      caller: [os.getenv]
+      path: ['os.path.join(os.path.dirname(__file__), ''../.env'')']
+  GEMINI_API_KEY:
+    type: env
+    params:
+      caller: [os.getenv, genai.Client, os.environ]
+      path: [backend.agents.business_analysis_agent, backend.agents.agent, backend.agents.marketing_orchestrator, backend.agents.adk_visual_agents,
+        'os.path.join(os.path.dirname(__file__), ''../.env'')']
+  GEMINI_MODEL:
+    type: env
+    params:
+      caller: [os.getenv]
+      path: [backend.agents.business_analysis_agent, backend.api.routes.campaigns, backend.agents.agent, backend.agents.marketing_orchestrator,
+        backend.agents.adk_visual_agents, 'os.path.join(os.path.dirname(__file__), ''../.env'')']
+  GOOGLE_API_KEY:
+    type: env
+    params:
+      caller: [os.getenv, genai.Client]
+      path: [backend.api.routes.campaigns, backend.agents.adk_visual_agents]
+  GOOGLE_CLOUD_LOCATION:
+    type: env
+    params:
+      caller: [os.getenv]
+      path: [backend.agents.adk_visual_agents]
+  GOOGLE_CLOUD_PROJECT:
+    type: env
+    params:
+      caller: [os.getenv]
+      path: [backend.agents.adk_visual_agents]
+  GOOGLE_GENAI_USE_VERTEXAI:
+    type: env
+    params:
+      caller: [os.getenv]
+      path: [backend.agents.adk_visual_agents]
+  IMAGE_MODEL:
+    type: env
+    params:
+      caller: [os.getenv]
+      path: [backend.agents.adk_visual_agents]
+  LOG_FILE:
+    type: env
+    params:
+      caller: [os.getenv]
+      path: ['os.path.join(os.path.dirname(__file__), ''../.env'')']
+  LOG_LEVEL:
+    type: env
+    params:
+      caller: [os.getenv]
+      path: ['os.path.join(os.path.dirname(__file__), ''../.env'')']
+  VIDEO_MODEL:
+    type: env
+    params:
+      caller: [os.getenv]
+      path: [backend.agents.adk_visual_agents]
+
+files:
+  ../.env:
+    type: pattern
+    actions: [read]
+    params:
+      caller: [os.path.join]
+      pattern: [os.path.dirname(), ../.env]
+  data/images/generated:
+    type: literal
+    actions: [read]
+    params:
+      caller: [_create_fallback_image_file]
+  data/videos/generated:
+    type: literal
+    actions: [read]
+    params:
+      caller: [_create_fallback_video_file]
+  image_path:
+    type: variable
+    actions: [read]
+    params:
+      caller: [img.save]
+  images_dir:
+    type: variable
+    actions: [write]
+    params:
+      caller: [images_dir.mkdir]
+  video_path:
+    type: variable
+    actions: [write]
+    params:
+      caller: [open]
+      alias: [video_file]
+  videos_dir:
+    type: variable
+    actions: [write]
+    params:
+      caller: [videos_dir.mkdir]
+
+networks:
+  localhost:
+    type: api
+    actions: [GET]
+    urls: ['/{...}']
+    protocols: [http]
+    ports: ["80"]
+    params:
+      pattern: http://localhost:8000/api/v1/content/images/{campaign_id}/{image_filename}
+      caller: [_create_fallback_image_file]
+  localhost.1:
+    type: api
+    actions: [GET]
+    urls: ['/{...}']
+    protocols: [http]
+    ports: ["80"]
+    params:
+      pattern: http://localhost:8000/api/v1/content/videos/{campaign_id}/{video_filename}
+      caller: [_create_fallback_video_file]
+  post_url:
+    type: api
+    actions: [GET]
+    protocols: [https]
+    ports: ["443"]
+    params:
+      pattern: https://{post_url}
+      caller: [_generate_batch_content_with_gemini, _generate_fallback_posts]
+      dynamic: "True"
+      variable: post_url
